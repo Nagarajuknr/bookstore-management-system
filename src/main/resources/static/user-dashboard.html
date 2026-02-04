@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop – Bookstore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0f1117;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ─── NAVBAR ─── */
+        .navbar {
+            background: #161822;
+            border-bottom: 1px solid #2e3044;
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-user {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .nav-user strong { color: #fff; }
+
+        .btn-logout {
+            padding: 8px 18px;
+            background: #1e2030;
+            border: 1px solid #2e3044;
+            border-radius: 8px;
+            color: #f87171;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239,68,68,0.12);
+            border-color: rgba(239,68,68,0.3);
+        }
+
+        /* ─── CART BUTTON ─── */
+        .cart-btn {
+            position: relative;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: none;
+            border-radius: 9px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .cart-btn:hover {
+            box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            background: #ef4444;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #161822;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(160deg, #1a1d2e 0%, #161822 100%);
+            border-bottom: 1px solid #2e3044;
+            padding: 48px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+            top: -200px; left: 50%; transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: #6b7280;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── SEARCH & FILTER ─── */
+        .controls {
+            max-width: 1100px;
+            margin: 28px auto 0;
+            padding: 0 24px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-wrap {
+            flex: 1;
+            min-width: 220px;
+            position: relative;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            background: #161822;
+            border: 1.5px solid #2e3044;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.93rem;
+        }
+
+        .search-wrap input:focus { outline: none; border-color: #6366f1; }
+        .search-wrap .icon {
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: #4b5063;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 9px 16px;
+            background: #161822;
+            border: 1.5px solid #2e3044;
+            border-radius: 9px;
+            color: #9ca3af;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover { border-color: #6366f1; color: #a5b4fc; }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        /* ─── BOOKS GRID ─── */
+        .shop {
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 0 24px 60px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        /* ─── BOOK CARD ─── */
+        .book-card {
+            background: #161822;
+            border: 1px solid #2e3044;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .book-cover {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            position: relative;
+        }
+
+        .cover-1 { background: linear-gradient(135deg, #1e1b4b, #312e81); }
+        .cover-2 { background: linear-gradient(135deg, #14532d, #166534); }
+        .cover-3 { background: linear-gradient(135deg, #431407, #9a3412); }
+        .cover-4 { background: linear-gradient(135deg, #1e3a5f, #1d4ed8); }
+        .cover-5 { background: linear-gradient(135deg, #4a1d96, #7c3aed); }
+        .cover-6 { background: linear-gradient(135deg, #713f12, #d97706); }
+
+        .stock-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4ade80;
+        }
+
+        .stock-tag.low { color: #fbbf24; }
+        .stock-tag.out { color: #f87171; }
+
+        .book-body {
+            padding: 18px;
+        }
+
+        .book-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-author {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+
+        .book-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .book-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #a5b4fc;
+        }
+
+        .btn-cart {
+            width: 100%;
+            padding: 11px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: none;
+            border-radius: 9px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow 0.2s, opacity 0.2s;
+        }
+
+        .btn-cart:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.4); }
+        .btn-cart:disabled { background: #2e3044; color: #4b5063; cursor: not-allowed; box-shadow: none; }
+
+        /* ─── CART SIDEBAR ─── */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .overlay.open { opacity: 1; pointer-events: auto; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 92vw;
+            height: 100vh;
+            background: #161822;
+            border-left: 1px solid #2e3044;
+            z-index: 200;
+            transition: right 0.3s cubic-bezier(.4,0,.2,1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open { right: 0; }
+
+        .sidebar-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid #2e3044;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .btn-close:hover { color: #fff; }
+
+        .cart-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 24px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 60px 0;
+            color: #4b5063;
+        }
+
+        .cart-empty .icon { font-size: 2.8rem; margin-bottom: 12px; }
+
+        /* single cart item */
+        .cart-item {
+            display: flex;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid #1e2030;
+        }
+
+        .cart-item:last-child { border-bottom: none; }
+
+        .ci-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: #1e2030;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .ci-info { flex: 1; min-width: 0; }
+
+        .ci-title {
+            font-weight: 600;
+            font-size: 0.93rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ci-price {
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .ci-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .ci-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: #1e2030;
+            border: 1px solid #2e3044;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        .ci-btn:hover { background: #2e3044; }
+
+        .ci-qty { font-weight: 600; font-size: 0.93rem; min-width: 18px; text-align: center; }
+
+        .ci-remove {
+            background: none;
+            border: none;
+            color: #f87171;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* Cart footer */
+        .cart-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #2e3044;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .cart-total-row.big {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #2e3044;
+        }
+
+        .cart-total-row.big span:last-child { color: #a5b4fc; }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: box-shadow 0.2s;
+        }
+
+        .btn-checkout:hover { box-shadow: 0 4px 16px rgba(22,163,74,0.4); }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            z-index: 999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show  { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #16a34a; }
+        .toast.error   { background: #dc2626; }
+
+        /* ─── EMPTY GRID ─── */
+        .empty-grid {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #4b5063;
+        }
+
+        .empty-grid .icon { font-size: 3rem; margin-bottom: 12px; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 600px) {
+            .navbar { padding: 12px 16px; }
+            .nav-user { display: none; }
+            .hero h1 { font-size: 1.8rem; }
+            .controls { margin-top: 20px; }
+            .books-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .book-cover { height: 130px; font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="nav-logo">📚</div>
+        <span class="nav-title">Bookstore</span>
+    </div>
+    <div class="nav-right">
+        <button class="cart-btn" onclick="toggleCart()">
+            🛒 Cart
+            <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <span class="nav-user">Hi, <strong id="navName">User</strong></span>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>📖 Discover Great Books</h1>
+    <p>Browse our collection, add favourites to your cart, and check out in seconds.</p>
+</div>
+
+<!-- SEARCH + FILTERS -->
+<div class="controls">
+    <div class="search-wrap">
+        <span class="icon">🔍</span>
+        <input type="text" id="searchBox" placeholder="Search title or author…" oninput="applyFilters()">
+    </div>
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all"      onclick="setFilter(this,'all')">All</button>
+        <button class="filter-btn"        data-filter="instock"  onclick="setFilter(this,'instock')">In Stock</button>
+        <button class="filter-btn"        data-filter="lowprice" onclick="setFilter(this,'lowprice')">Price ↑</button>
+        <button class="filter-btn"        data-filter="highprice" onclick="setFilter(this,'highprice')">Price ↓</button>
+    </div>
+</div>
+
+<!-- BOOKS GRID -->
+<div class="shop">
+    <div class="books-grid" id="booksGrid"></div>
+</div>
+
+<!-- CART OVERLAY + SIDEBAR -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>🛒 Your Cart</h2>
+        <button class="btn-close" onclick="toggleCart()">×</button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">₹0.00</span></div>
+        <div class="cart-total-row big"><span>Total</span><span id="cartTotal">₹0.00</span></div>
+        <button class="btn-checkout" onclick="checkout()">🛍️ Checkout</button>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// GUARD
+// ═══════════════════════════════════════════════════════
+(function() {
+    const s = localStorage.getItem('currentUser');
+    if (!s) { window.location.href = 'index.html'; return; }
+    const u = JSON.parse(s);
+    if (u.role !== 'user') { window.location.href = 'index.html'; return; }
+    document.getElementById('navName').textContent = u.name;
+})();
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+const API       = 'http://localhost:8080/api/books';
+let   allBooks  = [];
+let   cart      = JSON.parse(localStorage.getItem('bsCart')) || [];
+let   activeFilter = 'all';
+
+// cover class cycle
+const COVERS = ['cover-1','cover-2','cover-3','cover-4','cover-5','cover-6'];
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+    document.getElementById('toastMsg').textContent  = msg;
+    el.className = 'toast show ' + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGOUT
+// ═══════════════════════════════════════════════════════
+function logout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('bsCart');
+    window.location.href = 'index.html';
+}
+
+// ═══════════════════════════════════════════════════════
+// LOAD BOOKS
+// ═══════════════════════════════════════════════════════
+async function loadBooks() {
+    try {
+        const res = await fetch(API);
+        allBooks  = await res.json();
+        applyFilters();
+    } catch (err) {
+        toast('Cannot reach server. Is Spring Boot running?', 'error');
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════════
+function setFilter(btn, type) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = type;
+    applyFilters();
+}
+
+function applyFilters() {
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    let list = allBooks.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        b.author.toLowerCase().includes(q)
+    );
+
+    switch (activeFilter) {
+        case 'instock':  list = list.filter(b => b.quantity > 0); break;
+        case 'lowprice': list.sort((a, b) => a.price - b.price); break;
+        case 'highprice': list.sort((a, b) => b.price - a.price); break;
+    }
+
+    renderBooks(list);
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER BOOKS
+// ═══════════════════════════════════════════════════════
+function renderBooks(books) {
+    const grid = document.getElementById('booksGrid');
+
+    if (books.length === 0) {
+        grid.innerHTML = `<div class="empty-grid"><div class="icon">📭</div><p>No books match your search.</p></div>`;
+        return;
+    }
+
+    grid.innerHTML = books.map((b, i) => {
+        const cover   = COVERS[i % COVERS.length];
+        const inStock = b.quantity > 0;
+        const isLow   = b.quantity > 0 && b.quantity <= 3;
+
+        let stockLabel = 'In Stock';
+        let stockClass = '';
+        if (!inStock)  { stockLabel = 'Out of Stock'; stockClass = 'out'; }
+        else if (isLow){ stockLabel = `Only ${b.quantity} left`; stockClass = 'low'; }
+
+        return `
+        <div class="book-card">
+            <div class="book-cover ${cover}">
+                📖
+                <span class="stock-tag ${stockClass}">${stockLabel}</span>
+            </div>
+            <div class="book-body">
+                <div class="book-title">${b.title}</div>
+                <div class="book-author">by ${b.author}</div>
+                <div class="book-footer">
+                    <span class="book-price">₹${b.price.toFixed(2)}</span>
+                </div>
+                <button class="btn-cart" onclick="addToCart(${b.id})" ${!inStock ? 'disabled' : ''}>
+                    ${inStock ? '🛒 Add to Cart' : 'Out of Stock'}
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// CART – add / remove / update
+// ═══════════════════════════════════════════════════════
+function saveCart() {
+    localStorage.setItem('bsCart', JSON.stringify(cart));
+}
+
+function addToCart(bookId) {
+    const book = allBooks.find(b => b.id === bookId);
+    if (!book || book.quantity <= 0) return;
+
+    const item = cart.find(c => c.id === bookId);
+    if (item) {
+        if (item.qty >= book.quantity) {
+            toast('Max stock reached for this book.', 'error');
+            return;
+        }
+        item.qty++;
+    } else {
+        cart.push({ id: book.id, title: book.title, price: book.price, qty: 1, maxQty: book.quantity });
+    }
+
+    saveCart();
+    renderCartBadge();
+    toast(`${book.title} added to cart!`);
+}
+
+function changeQty(bookId, delta) {
+    const item = cart.find(c => c.id === bookId);
+    if (!item) return;
+
+    const newQty = item.qty + delta;
+    if (newQty <= 0) {
+        cart = cart.filter(c => c.id !== bookId);
+    } else if (newQty > item.maxQty) {
+        toast('Max stock reached.', 'error');
+        return;
+    } else {
+        item.qty = newQty;
+    }
+
+    saveCart();
+    renderCartBadge();
+    renderCartBody();
+}
+
+function removeItem(bookId) {
+    cart = cart.filter(c => c.id !== bookId);
+    saveCart();
+    renderCartBadge();
+    renderCartBody();
+    toast('Item removed.');
+}
+
+// ═══════════════════════════════════════════════════════
+// CART UI
+// ═══════════════════════════════════════════════════════
+function renderCartBadge() {
+    document.getElementById('cartBadge').textContent = cart.reduce((s, c) => s + c.qty, 0);
+}
+
+function renderCartBody() {
+    const body   = document.getElementById('cartBody');
+    const footer = document.getElementById('cartFooter');
+
+    if (cart.length === 0) {
+        body.innerHTML = `<div class="cart-empty"><div class="icon">🛒</div><p>Your cart is empty</p></div>`;
+        footer.style.display = 'none';
+        return;
+    }
+
+    body.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="ci-icon">📖</div>
+            <div class="ci-info">
+                <div class="ci-title">${item.title}</div>
+                <div class="ci-price">₹${item.price.toFixed(2)} each</div>
+                <div class="ci-controls">
+                    <button class="ci-btn" onclick="changeQty(${item.id}, -1)">−</button>
+                    <span class="ci-qty">${item.qty}</span>
+                    <button class="ci-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                    <button class="ci-remove" onclick="removeItem(${item.id})">🗑️</button>
+                </div>
+            </div>
+            <div style="text-align:right; font-weight:600; color:#a5b4fc;">₹${(item.price * item.qty).toFixed(2)}</div>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    document.getElementById('cartSubtotal').textContent = '₹' + total.toFixed(2);
+    document.getElementById('cartTotal').textContent    = '₹' + total.toFixed(2);
+    footer.style.display = 'block';
+}
+
+function toggleCart() {
+    document.getElementById('overlay').classList.toggle('open');
+    document.getElementById('sidebar').classList.toggle('open');
+    renderCartBody();
+}
+
+// ═══════════════════════════════════════════════════════
+// CHECKOUT
+// ═══════════════════════════════════════════════════════
+function checkout() {
+    if (cart.length === 0) return;
+
+    const total = cart.reduce((s, c) => s + c.price * c.qty, 0).toFixed(2);
+    const items = cart.map(c => `  • ${c.title} x${c.qty}`).join('\n');
+
+    alert(`✅ Order Confirmed!\n\n${items}\n\nTotal: ₹${total}\n\nThank you for shopping!`);
+
+    cart = [];
+    saveCart();
+    renderCartBadge();
+    toggleCart();
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+loadBooks();
+renderCartBadge();
+</script>
+</body>
+</html>
